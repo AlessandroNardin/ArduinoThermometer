@@ -8,6 +8,10 @@ SevSeg sevseg;
 OneWire oneWire(A0); 
 DS18B20 sensor(&oneWire); 
 
+//Variables for the interval
+unsigned long previousMillis = 0;
+const long interval = 5000;
+
 void setup() {
   //Seven segment display setup
   byte numDigits = 4;
@@ -25,12 +29,22 @@ void setup() {
   //Sensor setup
   sensor.begin();
   sensor.setResolution(12);
+  Serial.begin(9600);
 
 }
+
+float temp = 0;
 void loop() {
   sevseg.refreshDisplay();
-  if(sensor.isConversionComplete()){
-    sevseg.setNumberF(sensor.getTempC(),2);
+  unsigned long currentMillis = millis();
+  if(currentMillis - previousMillis >= interval && sensor.isConversionComplete()){
+    previousMillis = currentMillis;
+    temp = sensor.getTempC();
+    sevseg.setNumberF(temp,2);
+    //Send on serial
+    Serial.print(temp);
+    Serial.print("|");
+    //
     sensor.requestTemperatures();
   }
   
