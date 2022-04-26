@@ -1,5 +1,5 @@
 //Including necessary libraries
-#include "SevSeg.h"
+#include <SevSeg.h>
 #include <OneWire.h>
 #include <DS18B20.h>
 
@@ -27,7 +27,6 @@ void setup() {
   sensor.setResolution(12);
 
 }
-
 void loop() {
   sevseg.refreshDisplay();
   if(sensor.isConversionComplete()){
